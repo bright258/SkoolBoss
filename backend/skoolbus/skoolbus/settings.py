@@ -117,5 +117,5 @@ MEDIA_ROOT = os.path.join(BASE_DIR, 'media')
 
 
 DEFAULT_AUTO_FIELD = 'django.db.models.BigAutoField'
-PAYSTACK_SECRET_KEY = "sk_test_4b55ff77139812eeff86146e0ce6ad5fb8d503ce"
+PAYSTACK_SECRET_KEY 
 PAYSTACK_URL = "https://api.paystack.co"
