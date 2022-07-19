@@ -5,7 +5,7 @@ BASE_DIR = Path(__file__).resolve().parent.parent
 
 
 
-SECRET_KEY = 'django-insecure-xf)$fl7x-n$vy%uh_2$6+0gvx27e_6*c1%4^$y&_t_v+%60gsm'
+SECRET_KEY 
 
 
 DEBUG = True
@@ -117,5 +117,5 @@ MEDIA_ROOT = os.path.join(BASE_DIR, 'media')
 
 
 DEFAULT_AUTO_FIELD = 'django.db.models.BigAutoField'
-PAYSTACK_SECRET_KEY = "sk_test_4b55ff77139812eeff86146e0ce6ad5fb8d503ce"
+PAYSTACK_SECRET_KEY 
 PAYSTACK_URL = "https://api.paystack.co"
