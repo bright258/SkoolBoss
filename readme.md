@@ -21,6 +21,5 @@ Third Party services: Lazerpay, Google Meet, Google Maps, Paystack, Slack, Cloud
 Frontend is to be built with Reactjs by The boss and Flutter
 
 
-Teachers model, permissions
-one dashboard, initial dashboard
+
 
