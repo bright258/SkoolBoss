@@ -6,7 +6,7 @@ BASE_DIR = Path(__file__).resolve().parent.parent
 
 
 
-SECRET_KEY = 'django-insecure-xf)$fl7x-n$vy%uh_2$6+0gvx27e_6*c1%4^$y&_t_v+%60gsm'
+# SECRET_KEY 
 
 
 DEBUG = True
@@ -126,12 +126,16 @@ COINBASE_COMMERCE_API_KEY ="8acfabb8-cd44-4096-8274-6b11a56a2aff"
 
 
 DEFAULT_AUTO_FIELD = 'django.db.models.BigAutoField'
-PAYSTACK_SECRET_KEY = "sk_test_4b55ff77139812eeff86146e0ce6ad5fb8d503ce"
-PAYSTACK_URL = "https://api.paystack.co"
 
+# PAYSTACK_SECRET_KEY
+# PAYSTACK_URL 
 
-cloudinary.config(
-    cloud_name= 'dmjwzcjel',
-    api_key=  '166665833888589',
-    api_secret= 'FmuK9ZcteGr3UJg10wvrHGHOAAA'
-)
+# cloudinary.config(
+#     # cloud_name
+#     api_key, 
+#     api_secret= 
+# )
+
+# PAYSTACK_SECRET_KEY 
+# PAYSTACK_URL 
+
