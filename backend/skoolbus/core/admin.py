@@ -9,7 +9,8 @@ from .models import(
     Teacher,
     CourseMaterial,
     Programme,
-    Transactions
+    Transactions,
+    Document
     # StudentWallet
 
 
@@ -34,3 +35,4 @@ admin.site.register(SchoolProfile)
 admin.site.register(CourseMaterial)
 admin.site.register(Programme)
 admin.site.register(Transactions)
+admin.site.register(Document)

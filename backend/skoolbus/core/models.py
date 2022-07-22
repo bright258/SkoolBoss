@@ -5,6 +5,8 @@ from .managers import CustomUserManager
 from django.utils.translation import gettext_lazy as _
 from django.utils.text import slugify
 from django.conf import settings
+
+from cloudinary.models import CloudinaryField
 from .enums import (
     Gender,
     Course,
@@ -63,6 +65,9 @@ class Course(Base):
     programme = models.ForeignKey(Programme, on_delete= models.CASCADE, blank = True, null = True)
     materials = models.ManyToManyField(CourseMaterial, null = True)
 
+
+
+
 class Teacher(Base):
     user = models.ForeignKey(settings.AUTH_USER_MODEL, on_delete = models.CASCADE, related_name= 'teacher', null = True )
     first_name = models.CharField(max_length= 200, null =True)
@@ -74,6 +79,8 @@ class Teacher(Base):
     gender = models.CharField(_('gender'), default = Gender.MALE, choices = Gender.choices,max_length = 200, null = True, blank = True)
     phone_number = models.CharField(_('phonenumber'), max_length = 200, null = True, blank = True)
     programme = models.ForeignKey(Programme, on_delete= models.CASCADE, null = True, blank = True)
+    school_bio = models.TextField(max_length = 3000, blank = True)
+    schools_map = models.FileField(upload_to = 'then', blank = True, null = True)
     start_date = models.DateField(null = True)
     end_date = models.DateField(null = True)
     image = models.ImageField(upload_to ='then', null = True)
@@ -82,11 +89,18 @@ class Teacher(Base):
 
 
 
+class Document(Base):
+    name = models.CharField(max_length= 200)
+    file = CloudinaryField('image')
+
+    def image_url(self):
+        return (f"https://res.cloudinary.com/dmjwzcjel/{self.file}")
+
 
 
 
 class SchoolProfile(Base):
-    user = models.ForeignKey(settings.AUTH_USER_MODEL, on_delete= models.CASCADE, related_name= 'school', null = True)
+    user = models.ForeignKey(settings.AUTH_USER_MODEL, on_delete= models.CASCADE, related_name= 'school', null = True, default = 'Free')
     name_of_school = models.CharField(max_length = 300, blank = True)
     first_name = models.CharField(_('firstname'),max_length = 200, null = True, blank = True)
     last_name = models.CharField(_('lastname'),max_length = 200, null = True, blank = True)
@@ -99,12 +113,13 @@ class SchoolProfile(Base):
     school_bio = models.TextField(max_length = 3000, blank = True)
     schools_map = models.FileField(upload_to = 'then', blank = True, null = True)
     school_fees = models.DecimalField(max_digits = 11, decimal_places= 2, null = True, blank = True)
-    wallet = models.DecimalField(max_digits = 11, decimal_places = 2, null = True)
+    wallet = models.IntegerField(default = 1, null = True)
     currency = models.CharField(max_length = 50, default = 'NGN', null = True)
     recipient_code = models.CharField(max_length = 200, null = True)
     year = models.ForeignKey(Year, on_delete= models.CASCADE, related_name= 'year_of_study', null = True, blank = True)
     course = models.ManyToManyField(Course, null = True, blank = True)
     image = models.ImageField(upload_to ='then', null = True)
+    documents = models.ManyToManyField(Document)
     
     def checkpin(self, pin):
         l = SchoolPin.objects.select_related('user').get(user = self.user).showpin()

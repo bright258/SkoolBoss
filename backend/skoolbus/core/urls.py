@@ -13,7 +13,9 @@ from .views import (
     TransactionView,
     PayFeesView,
     PaystackWebhookView,
-    TeacherView
+    TeacherView,
+    UpdateTeacherView,
+    DocumentView
    
     
 
@@ -23,7 +25,7 @@ urlpatterns =[
     path('register/',Register.as_view()),
     path('login/',Login.as_view() ),
     path('pin/', PinView.as_view()),
-    path('schoolprofile/', SchoolProfileView.as_view()),
+    path('create/schoolprofile/', SchoolProfileView.as_view()),
     path('course/', CourseView.as_view()),
     path('materials/', CourseMaterialView.as_view()),
     path('profile/get/<int:pk>', GetProfileView.as_view()),
@@ -37,5 +39,7 @@ urlpatterns =[
         name="paystack-webhook",
     ),
     path('teacher/profile/<int:pk>',GetTeacherView.as_view()),
-    path('teacher/profile/create/', TeacherView.as_view())
+    path('teacher/profile/create/', TeacherView.as_view()),
+    path('teacher/update/<int:pk>/', UpdateTeacherView.as_view()),
+    path('document/', DocumentView.as_view())
 ] 

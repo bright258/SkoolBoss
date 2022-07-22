@@ -10,7 +10,8 @@ from .models import (
     Course,
     CourseMaterial,
     Programme,
-    Transactions
+    Transactions,
+    Document
     
     )
 from rest_framework.authtoken.models import Token
@@ -27,9 +28,10 @@ from .utils  import (
 from .services import paystack
 
 class UserSerializer(serializers.ModelSerializer):
+    id = serializers.ReadOnlyField()
     class Meta:
         model = User
-        fields = [ 'email', 'password', 'username']
+        fields = [ 'email', 'password', 'username', 'id']
 
     def create(self, validated_data):
         user = User(
@@ -44,10 +46,29 @@ class UserSerializer(serializers.ModelSerializer):
 class TeacherSerializer(serializers.ModelSerializer):
     class Meta:
         model = Teacher
-        fields = '__all__'
-        # extra__kwargs = {
-
+        fields = [ 
+            'programme',
+            'duration',
+            'start_date',
+            'end_date',
             
+            'first_name',
+            'last_name',
+            'gender',
+            'phone_number',
+            'image'
+            
+
+
+
+        ]
+        extra__kwargs = {
+            'school':{'read_only':'True'},
+            'salary':{'read_only':'True'},
+            'schools_map':{'read_only':'True'},
+            'school_bio':{'read_only':'True'}
+
+        }   
 
 
     def create(self, validated_data):
@@ -58,6 +79,7 @@ class TeacherSerializer(serializers.ModelSerializer):
 
 class SchoolPinSerializer(serializers.Serializer):
     pin = serializers.CharField(max_length = 200, validators = [check_list])
+    id = serializers.ReadOnlyField()
 
     class Meta:
         model = SchoolPin
@@ -75,7 +97,9 @@ class SchoolPinSerializer(serializers.Serializer):
         return pin
 
     def save(self, **kwargs):
+        # user = User.objects.get(pk = 19 )
         user = self.context['request'].user
+        
         pin = self.validated_data['pin']
         
             
@@ -90,17 +114,21 @@ class SchoolPinSerializer(serializers.Serializer):
             
         if pin in uniuyo_list:
             SchoolProfile.objects.create(
-            user = user, name_of_school = 'Uniuyo', 
+            user = user, 
+            name_of_school = 'Uniuyo', 
             schools_map = 'then/images_2.jpeg', 
             school_bio = uniuyo_details['rating'],
             recipient_code = recipient_code,
             school_fees = '6000')
         
         elif pin in unical_list:
-            SchoolProfile.objects.create(user = user, 
+            
+            
+            SchoolProfile.objects.create(user =user, 
             name_of_school = "Unical", 
             schools_map = 'then/images(3).jpeg', 
-            school_bio = unical_details['rating'], 
+            school_bio = unical_details['rating'],
+            recipient_code = recipient_code, 
             school_fees = '5000')
         
         elif pin in uniuyo_teachers_list:
@@ -110,7 +138,7 @@ class SchoolPinSerializer(serializers.Serializer):
                 school = 'Uniuyo'
              
 
-             )
+            )
 
         elif pin in unical_teachers_list:
             Teacher.objects.create(
@@ -130,11 +158,15 @@ class SchoolPinSerializer(serializers.Serializer):
     
 
 class SchoolProfileSerializer(serializers.ModelSerializer):
+    id = serializers.ReadOnlyField()
+    image_url = serializers.ReadOnlyField()
+    # documents = serializers.Hyperlink(url = image_url, obj = image_url)
 
 
     class Meta:
         model = SchoolProfile
         fields = [ 
+            'id',
             'name_of_school',
             'programme',
             'duration',
@@ -147,7 +179,11 @@ class SchoolProfileSerializer(serializers.ModelSerializer):
             'first_name',
             'last_name',
             'gender',
-            'phone_number'
+            'phone_number',
+            'documents',
+            'image',
+            'image_url'
+            
 
 
         ]
@@ -156,7 +192,8 @@ class SchoolProfileSerializer(serializers.ModelSerializer):
             'school_bio': {'read_only': 'True'},
             'school_fees': {'read_only': 'True'},
             'schools_map': {'read_only' : 'True'},
-            'recipient_code': {'read_only': 'True'}
+            'recipient_code': {'read_only': 'True'},
+            'wallet': {'read_only':'True'}
 
 
         
@@ -174,13 +211,15 @@ class SchoolProfileSerializer(serializers.ModelSerializer):
         return p
 
     def update(self, instance, validated_data):
-        instance.course_duration = validated_data['course_duration']
+        # instance.duration = validated_data['duration']
         
 
         instance.save()
         profile = SchoolProfile.objects.update(**validated_data)
 
         return  profile
+
+    
 
 class CourseSerializer(serializers.ModelSerializer):
     class Meta:
@@ -221,9 +260,9 @@ class DepositFunds(serializers.ModelSerializer):
         user = self.context['request'].user
         tran = SchoolProfile.objects.select_related('user').get(user = user)
         wallet = tran.wallet
-        bal = get_balance(wallet)
+       
         validated_data = self.validated_data
-        print(bal)
+        # print(bal)
 
         payload = { 
             'amount': validated_data['amount'],
@@ -241,6 +280,8 @@ class DepositFunds(serializers.ModelSerializer):
             paystack_reference = ref
 
         )
+        wallet = SchoolProfile.objects.get(user = user).wallet
+        SchoolProfile.objects.select_related('user').update(wallet = wallet + validated_data['amount'])
 
 
         return ref
@@ -254,43 +295,57 @@ class TransactionSerializer(serializers.ModelSerializer):
 class PayFeesSerializer(serializers.ModelSerializer):
     class Meta:
         model = Transactions
-        fields = ['amount' 'narration']
+        fields = ['amount',
+         'narration']
 
     def save(self, **kwargs):
 
         user = self.context['request'].user
         payer = SchoolProfile.objects.select_related('user').get(user = user)
         wallet = payer.wallet
-        bal = get_balance(wallet)
+        
         
         validated_data = self.validated_data
         recipient_code = payer.recipient_code
 
-        if bal < validated_data['amount']:
-            raise serializers.ValidationError({'detail': 'insufficient_funds'})
+        # if bal < validated_data['amount']:
+        #     raise serializers.ValidationError({'detail': 'insufficient_funds'})
         
-        else:
+        
 
-            payload = {
+        payload = {
 
-                'source': 'balance',
-                'amount': validated_data['amount'],
-                'recipient_code': recipient_code,
-                'currency':'NGN'
-            }
-            rel = paystack.initialize_transfer(payload)
-            print(rel)
+            'source':'balance',
+            'amount': validated_data['amount'],
+            'recipient_code': recipient_code,
+            'currency':'NGN'
+        }
+        rel = paystack.initialize_transfer(payload)
+        print(rel)
 
-            Transactions.objects.create(
-                
-                **validated_data
+        Transactions.objects.create(
+            transaction_type = TransactionType.PAYMENT,
+            **validated_data
 
 
-            )
+        )
+        # wallet2 = SchoolProfile.objects.get(user = user).wallet
+        SchoolProfile.objects.select_related('user').update(wallet = wallet - validated_data['amount'])
 
         return payer
         
 
+class DocumentSerializer(serializers.ModelSerializer):
+    class Meta:
+        model = Document
+        fields = [  
+            'file',
+            'name',
+            'image_url'
+        ]
 
-
-        
+    def to_representation(self, instance):
+        representation = super().to_representation(instance)
+        representation.pop('file')
+        representation.pop('name')
+        return representation

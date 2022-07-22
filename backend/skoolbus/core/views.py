@@ -1,5 +1,6 @@
 import json
 from codecs import lookup
+from re import T
 from django.forms import ValidationError
 from django.shortcuts import render
 from rest_framework.views import APIView
@@ -10,9 +11,12 @@ from rest_framework.generics import (
     UpdateAPIView,
     ListAPIView
 )
+
+from rest_framework.parsers import MultiPartParser
 from .tasks import handle_webhook
 from .serializers import ( 
     
+    DocumentSerializer,
     SchoolPinSerializer,
     TeacherSerializer,
     UserSerializer,
@@ -37,7 +41,8 @@ from .models import (
      SchoolProfile,
      Course,
      CourseMaterial,
-     Teacher
+     Teacher,
+     Document
      
      )
 from django.contrib.auth import authenticate
@@ -92,7 +97,7 @@ class Login(APIView):
     
 class PinView(CreateAPIView):
     permission_classes = [ 
-        AllowAny
+        IsAuthenticated
     ]
     serializer_class = SchoolPinSerializer
     queryset = SchoolPin
@@ -105,21 +110,21 @@ class SchoolProfileView(CreateAPIView):
     serializer_class = SchoolProfileSerializer
     queryset = SchoolProfile.objects.all()
 
-class CourseView(CreateAPIView):
+class CourseView(ListAPIView):
 
     permission_classes =  [ 
         AllowAny
     ]
     serializer_class = CourseSerializer
-    queryset = Course
+    queryset = Course.objects.all()
 
-class CourseMaterialView(CreateAPIView):
+class CourseMaterialView(ListAPIView):
     permission_classes = [ 
         AllowAny
         
     ]
     serializer_class = CourseMaterialSerializer
-    queryset = CourseMaterial
+    queryset = CourseMaterial.objects.all()
 
 class GetProfileView(RetrieveAPIView):
    permission_classes = [ 
@@ -127,6 +132,7 @@ class GetProfileView(RetrieveAPIView):
    ]
    serializer_class = SchoolProfileSerializer
    queryset = SchoolProfile.objects.all()
+   parser_classes = (MultiPartParser,)
 
 class UpdateProfileView(UpdateAPIView):
     permission_classes = [ 
@@ -141,9 +147,27 @@ class DepositFundsView(CreateAPIView):
     ]
     serializer_class = DepositFunds
     queryset = Transactions.objects.all()
+    
+
+class DocumentView(ListAPIView):
+    serializer_class = DocumentSerializer
+    permission_classes = [ 
+        AllowAny
+    ]
+    queryset = Document.objects.all()
+    # parser_classes = (MultiPartParser,)
+
 
 class GetTeacherView(RetrieveAPIView):
     serializer_class = TeacherSerializer
+    permission_classes = [ 
+        AllowAny
+    ]
+    queryset = Teacher.objects.all()
+
+
+class UpdateTeacherView(UpdateAPIView):
+    serializer_class =  TeacherSerializer
     permission_classes = [ 
         AllowAny
     ]

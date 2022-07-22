@@ -4,6 +4,7 @@ from .models import (
     Transactions,
     SchoolProfile)
 from .utils import TransactionStatus
+from .enums import TransactionType
 
 logger = logging.getLogger.__name__
 
@@ -13,7 +14,11 @@ def change_to_success(transaction, amount):
     school = SchoolProfile.objects.select_related('user').get(
         destination = transaction.destination.name
     )
-    
+
+# def collectpayments():
+#     Transactions.objects.filter(transaction_type = TransactionType.PAYMENT)
+
+
 
 @db_task()
 def handle_webhook(payload: dict):

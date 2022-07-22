@@ -9,6 +9,7 @@ urlpatterns = [
     path('admin/', admin.site.urls),
     path('', include('core.urls')),
     path('', include('videochat.urls')),
+    path('', include('crypto.urls'))
     # path('agora/', agoraView(app_id = "a843c82c381c4634815f6304ec46504d", channel ='Education') )
 ]
 

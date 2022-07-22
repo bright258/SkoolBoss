@@ -1,5 +1,6 @@
 from pathlib import Path
 import os
+import cloudinary
 
 BASE_DIR = Path(__file__).resolve().parent.parent
 
@@ -25,6 +26,7 @@ INSTALLED_APPS = [
     'rest_framework',
     'rest_framework.authtoken',
     'videochat',
+    'crypto'
     
     
 ]
@@ -91,9 +93,15 @@ REST_FRAMEWORK = {
         "rest_framework.authentication.SessionAuthentication",
         "rest_framework.authentication.TokenAuthentication",
     ),
+    
 }
 
+# REST_FRAMEWORK ={
 
+#     'DEFAULT_PERMISSION_CLASSES':[
+#         'rest_framework.permissions.isAdminUser'
+#     ]
+# }
 
 LANGUAGE_CODE = 'en-us'
 
@@ -114,8 +122,16 @@ STATICFILES_DIRS = [
 MEDIA_URL = 'media/'
 MEDIA_ROOT = os.path.join(BASE_DIR, 'media')
 
+COINBASE_COMMERCE_API_KEY ="8acfabb8-cd44-4096-8274-6b11a56a2aff"
 
 
 DEFAULT_AUTO_FIELD = 'django.db.models.BigAutoField'
 PAYSTACK_SECRET_KEY = "sk_test_4b55ff77139812eeff86146e0ce6ad5fb8d503ce"
 PAYSTACK_URL = "https://api.paystack.co"
+
+
+cloudinary.config(
+    cloud_name= 'dmjwzcjel',
+    api_key=  '166665833888589',
+    api_secret= 'FmuK9ZcteGr3UJg10wvrHGHOAAA'
+)
