@@ -10,7 +10,7 @@ BASE_DIR = Path(__file__).resolve().parent.parent
 # SECRET_KEY 
 =======
 SECRET_KEY 
->>>>>>> 2f145b73f2869301a432d02affd87264fdfa50cf
+
 
 
 DEBUG = True
@@ -147,4 +147,4 @@ DEFAULT_AUTO_FIELD = 'django.db.models.BigAutoField'
 =======
 PAYSTACK_SECRET_KEY 
 PAYSTACK_URL = "https://api.paystack.co"
->>>>>>> 2f145b73f2869301a432d02affd87264fdfa50cf
+
