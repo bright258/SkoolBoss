@@ -126,7 +126,7 @@ STATICFILES_DIRS = [
 MEDIA_URL = 'media/'
 MEDIA_ROOT = os.path.join(BASE_DIR, 'media')
 
-COINBASE_COMMERCE_API_KEY ="8acfabb8-cd44-4096-8274-6b11a56a2aff"
+COINBASE_COMMERCE_API_KEY 
 
 
 DEFAULT_AUTO_FIELD = 'django.db.models.BigAutoField'
