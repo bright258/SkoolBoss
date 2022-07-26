@@ -1,16 +1,16 @@
 from pathlib import Path
 import os
 import cloudinary
+import django_on_heroku
+
+
+django_on_heroku.settings(locals())
 
 BASE_DIR = Path(__file__).resolve().parent.parent
 
 
 
-<<<<<<< HEAD
-# SECRET_KEY 
-=======
-SECRET_KEY 
->>>>>>> 2f145b73f2869301a432d02affd87264fdfa50cf
+SECRET_KEY = 'django-insecure-xf)$fl7x-n$vy%uh_2$6+0gvx27e_6*c1%4^$y&_t_v+%60gsm'
 
 
 DEBUG = True
@@ -130,21 +130,12 @@ COINBASE_COMMERCE_API_KEY ="8acfabb8-cd44-4096-8274-6b11a56a2aff"
 
 
 DEFAULT_AUTO_FIELD = 'django.db.models.BigAutoField'
-<<<<<<< HEAD
-
-# PAYSTACK_SECRET_KEY
-# PAYSTACK_URL 
-
-# cloudinary.config(
-#     # cloud_name
-#     api_key, 
-#     api_secret= 
-# )
-
-# PAYSTACK_SECRET_KEY 
-# PAYSTACK_URL 
-
-=======
-PAYSTACK_SECRET_KEY 
+PAYSTACK_SECRET_KEY = "sk_test_4b55ff77139812eeff86146e0ce6ad5fb8d503ce"
 PAYSTACK_URL = "https://api.paystack.co"
->>>>>>> 2f145b73f2869301a432d02affd87264fdfa50cf
+
+
+cloudinary.config(
+    cloud_name= 'dmjwzcjel',
+    api_key=  '166665833888589',
+    api_secret= 'FmuK9ZcteGr3UJg10wvrHGHOAAA'
+)
