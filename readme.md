@@ -1,4 +1,4 @@
-SKOOLBUS is an edutech project targeted at helping undergraduates have a more seamless academic experience. Once it is completed, it will have the following features:
+SKOOLBOSS is an edutech project targeted at helping undergraduates have a more seamless academic experience. Once it is completed, it will have the following features:
 
 1. University Map
 2. Voting platform
